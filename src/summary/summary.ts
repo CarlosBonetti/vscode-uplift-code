@@ -4,14 +4,22 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { InsightsContext } from "../types";
 import { getTopRankedChurnFiles } from "../churn";
+import { SimpleGit } from "simple-git";
 
 export function createProjectSummaryPanel(
   context: vscode.ExtensionContext,
+  git: SimpleGit,
   { fileChurnMap, avgChurn }: InsightsContext
 ): vscode.WebviewPanel {
   // https://code.visualstudio.com/api/extension-guides/webview
 
   const rootUri = vscode.workspace.workspaceFolders![0].uri;
+
+  const activeTextEditor = vscode.window.activeTextEditor;
+  const activeFileName = activeTextEditor?.document.fileName.replace(
+    rootUri.fsPath + "/",
+    ""
+  );
 
   const items = Array.from(getTopRankedChurnFiles(fileChurnMap, 25)).map(
     ([file, churn]) => ({
@@ -33,7 +41,13 @@ export function createProjectSummaryPanel(
   );
 
   const template = readFileSync(templateFilePath.fsPath);
-  panel.webview.html = render(template.toString(), { avgChurn, items });
+  panel.webview.html = render(template.toString(), {
+    avgChurn,
+    items,
+    currentFileName: activeFileName,
+    currentFileChurn: activeFileName ? fileChurnMap.get(activeFileName) : null,
+  });
+
   panel.webview.onDidReceiveMessage((message) => {
     console.log("message", message);
 

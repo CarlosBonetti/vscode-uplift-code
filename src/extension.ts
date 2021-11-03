@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   const showProjectSummary = () => {
-    createProjectSummaryPanel(context, insightsContext);
+    createProjectSummaryPanel(context, git, insightsContext);
   };
 
   context.subscriptions.push(
