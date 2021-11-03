@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Code Insights: Project Summary</title>
   </head>
-  <body>
-    <h1>Project Summary</h1>
+  <body onload="attachLinkEvents()">
+    <h1>Code Insights: Project Summary</h1>
 
     <p>Project average churn: {{avgChurn}}</p>
 
@@ -22,11 +22,26 @@
       <tbody>
         {{#items}}
         <tr>
-          <td><a href="{{file}}">{{file}}</a></td>
+          <td><a href="{{href}}" class="file-link">{{file}}</a></td>
           <td align="right">{{churn}}</td>
         </tr>
         {{/items}}
       </tbody>
     </table>
+
+    <script>
+      function attachLinkEvents() {
+        const vscode = acquireVsCodeApi();
+
+        document.querySelectorAll("a.file-link").forEach((element) => {
+          element.addEventListener("click", () => {
+            vscode.postMessage({
+              command: "open-file",
+              href: element.getAttribute("href"),
+            });
+          });
+        });
+      }
+    </script>
   </body>
 </html>

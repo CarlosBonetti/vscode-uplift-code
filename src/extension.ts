@@ -18,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
   const insightsContext: InsightsContext = {
     fileChurnMap: new Map<string, number>(),
     maxChurn: 0,
-    avgChurn: 10,
+    avgChurn: 0,
   };
 
   const git = simpleGit({

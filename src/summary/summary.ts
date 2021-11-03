@@ -15,8 +15,8 @@ export function createProjectSummaryPanel(
 
   const items = Array.from(getTopRankedChurnFiles(fileChurnMap, 25)).map(
     ([file, churn]) => ({
-      file: vscode.Uri.file(path.join(rootUri.fsPath, file)),
-      href: vscode.Uri.file(path.join(rootUri.fsPath, file)),
+      file: file,
+      href: path.join(rootUri.fsPath, file),
       churn,
     })
   );
@@ -24,7 +24,7 @@ export function createProjectSummaryPanel(
   const panel = vscode.window.createWebviewPanel(
     "codeInsights.summary",
     "Code Insights: Project Summary",
-    vscode.ViewColumn.Beside,
+    vscode.ViewColumn.Active,
     { enableScripts: true }
   );
 
@@ -34,5 +34,14 @@ export function createProjectSummaryPanel(
 
   const template = readFileSync(templateFilePath.fsPath);
   panel.webview.html = render(template.toString(), { avgChurn, items });
+  panel.webview.onDidReceiveMessage((message) => {
+    console.log("message", message);
+
+    switch (message.command) {
+      case "open-file":
+        vscode.window.showTextDocument(vscode.Uri.file(message.href));
+        break;
+    }
+  });
   return panel;
 }
