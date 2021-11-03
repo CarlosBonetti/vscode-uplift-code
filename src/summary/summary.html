@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code Insights: Project Summary</title>
+  </head>
+  <body>
+    <h1>Project Summary</h1>
+
+    <p>Project average churn: {{avgChurn}}</p>
+
+    <h2>Files with highest churn</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th align="left">File</th>
+          <th align="right">Churn</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#items}}
+        <tr>
+          <td><a href="{{file}}">{{file}}</a></td>
+          <td align="right">{{churn}}</td>
+        </tr>
+        {{/items}}
+      </tbody>
+    </table>
+  </body>
+</html>
