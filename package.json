@@ -14,6 +14,18 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": [
+      {
+        "title": "Code Insights",
+        "properties": {
+          "codeInsights.exclude": {
+            "type": "array",
+            "default": [],
+            "description": "Configure glob patterns for excluding files and folders from all metrics calculation. Common configuration and generated files are excluded by default."
+          }
+        }
+      }
+    ],
     "commands": [
       {
         "title": "Code Insights: Show project summary",

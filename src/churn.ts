@@ -1,17 +1,9 @@
 import { SimpleGit } from "simple-git";
 import minimatch from "minimatch";
+import { execRawGitCommand } from "./git";
+import { getExtensionConfig } from "./configuration";
 
 const since = "18.month";
-
-// TODO: create an extension config
-const excludePatterns = [
-  "**/package.json",
-  "**/package-lock.json",
-  "**/poetry.lock",
-  "frontend/projects/main/src/locale/*",
-  "docker/frontend/eslint/eslint_count_errors.sh",
-  "docker/frontend/eslint/base_lint_report.txt",
-];
 
 function createExcludePatternsFilter(patterns: string[]) {
   const filters = patterns.map((pattern) => minimatch.filter(pattern));
@@ -22,6 +14,8 @@ function createExcludePatternsFilter(patterns: string[]) {
 export async function calculateProjectChurn(
   git: SimpleGit
 ): Promise<Map<string, number>> {
+  const { excludePatterns } = getExtensionConfig();
+
   const result = await execRawGitCommand(git, [
     "log",
     "--all",
@@ -56,21 +50,6 @@ export async function calculateFileChurn(
   ]);
 
   return result.length;
-}
-
-async function execRawGitCommand(
-  git: SimpleGit,
-  commands: string[]
-): Promise<string[]> {
-  const result = await git.raw(commands);
-  return extractResultLines(result);
-}
-
-function extractResultLines(result: string): string[] {
-  return result
-    .split(/\r\n|\r|\n/) // split by new lines
-    .map((line) => line.trim()) // trim empty spaces / empty lines
-    .filter((line) => !!line); // return only lines with actual content
 }
 
 export function getTopRankedChurnFiles(
