@@ -1,6 +1,6 @@
 {
-  "name": "vscode-code-insights",
-  "displayName": "code-insights",
+  "name": "vscode-uplift-code",
+  "displayName": "uplift-code",
   "description": "Code metrics and insights for Git projects",
   "version": "0.0.1",
   "engines": {
@@ -16,14 +16,14 @@
   "contributes": {
     "configuration": [
       {
-        "title": "Code Insights",
+        "title": "Uplift Code",
         "properties": {
-          "codeInsights.exclude": {
+          "upliftCode.exclude": {
             "type": "array",
             "default": [],
             "description": "Configure glob patterns for excluding files and folders from all metrics calculation. Common configuration and generated files are excluded by default."
           },
-          "codeInsights.since": {
+          "upliftCode.since": {
             "type": "string",
             "default": "12.month",
             "description": "Consider only commits from the specified range. Default is from last 12 months."
@@ -33,8 +33,8 @@
     ],
     "commands": [
       {
-        "title": "Code Insights: Show project summary",
-        "command": "codeInsights.showProjectSummary"
+        "title": "Uplift Code: Show project summary",
+        "command": "upliftCode.showProjectSummary"
       }
     ]
   },

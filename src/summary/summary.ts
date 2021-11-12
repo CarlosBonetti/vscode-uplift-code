@@ -30,8 +30,8 @@ export function createProjectSummaryPanel(
   );
 
   const panel = vscode.window.createWebviewPanel(
-    "codeInsights.summary",
-    "Code Insights: Project Summary",
+    "upliftCode.summary",
+    "Uplift Code: Project Summary",
     vscode.ViewColumn.Active,
     { enableScripts: true }
   );

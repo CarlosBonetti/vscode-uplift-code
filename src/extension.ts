@@ -14,6 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
     fileChurnMap: new Map<string, number>(),
     maxChurn: 0,
     avgChurn: 0,
+    loaded: false,
   };
 
   const git = simpleGit({
@@ -26,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "codeInsights.showProjectSummary",
+      "upliftCode.showProjectSummary",
       showProjectSummary
     )
   );
@@ -35,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.StatusBarAlignment.Right,
     100
   );
-  churnStatusBarItem.command = "codeInsights.showProjectSummary";
+  churnStatusBarItem.command = "upliftCode.showProjectSummary";
   context.subscriptions.push(churnStatusBarItem);
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor(() =>
@@ -52,6 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
     insightsContext.fileChurnMap = map;
     insightsContext.maxChurn = maxChurn;
     insightsContext.avgChurn = avgChurn;
+    insightsContext.loaded = true;
 
     updateStatusBarItem(churnStatusBarItem, git, insightsContext);
   });
@@ -74,7 +76,7 @@ function updateStatusBarItem(
   statusBarItem.text = `$(loading~spin) Churn: -`;
   statusBarItem.show();
 
-  if (insightsContext.fileChurnMap) {
+  if (insightsContext.loaded) {
     statusBarItem.text = `$(preview) Churn: ${
       insightsContext.fileChurnMap.get(
         workspaceRelativeFilename(textEditor.document.fileName)

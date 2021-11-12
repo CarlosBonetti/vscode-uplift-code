@@ -6,7 +6,7 @@ export interface ExtensionConfig {
 }
 
 export function getExtensionConfig(): ExtensionConfig {
-  const config = vscode.workspace.getConfiguration("codeInsights");
+  const config = vscode.workspace.getConfiguration("upliftCode");
 
   return {
     since: config.get<string>("since", "12.month"),
