@@ -10,42 +10,13 @@
 <body onload="attachLinkEvents()">
   <h1>Uplift Code: File Summary</h1>
 
-  <p>Churn for <code>{{currentFileName}}</code> file: {{currentFileChurn}}</p>
+  <h2><code>{{currentFileName}}</code></h2>
+  <h3>Churn {{currentFileChurn}}</h3>
+  <h3>Since {{since}}</h3>
   <p>
     <a href="https://marketplace.visualstudio.com/items?itemName=CarlosBonetti.vscode-uplift-code#churn"
       target="_blank">What is that?</a>
   </p>
-  <table>
-    <thead>
-      <tr>
-        <th align="left">File</th>
-        <th align="right">Churn</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#items}}
-      <tr>
-        <td><a href="{{href}}" class="file-link">{{file}}</a></td>
-        <td align="right">{{churn}}</td>
-      </tr>
-      {{/items}}
-    </tbody>
-  </table>
-
-  <script>
-    function attachLinkEvents() {
-      const vscode = acquireVsCodeApi();
-
-      document.querySelectorAll("a.file-link").forEach((element) => {
-        element.addEventListener("click", () => {
-          vscode.postMessage({
-            command: "open-file",
-            href: element.getAttribute("href"),
-          });
-        });
-      });
-    }
-  </script>
 </body>
 
 </html>

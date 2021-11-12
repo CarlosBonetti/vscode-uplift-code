@@ -6,6 +6,7 @@ import * as vscode from "vscode";
 import { getTopRankedChurnFiles } from "./churn";
 import { InsightsContext } from "./types";
 import { workspaceRelativeFilename } from "./util";
+import { ExtensionConfig, getExtensionConfig } from "./configuration";
 
 export function createProjectSummaryPanel(
   context: vscode.ExtensionContext,
@@ -14,6 +15,7 @@ export function createProjectSummaryPanel(
 ): vscode.WebviewPanel {
   // https://code.visualstudio.com/api/extension-guides/webview
 
+  const config = getExtensionConfig();
   const activeTextEditor = vscode.window.activeTextEditor;
   const activeFileName = activeTextEditor
     ? workspaceRelativeFilename(activeTextEditor?.document.fileName)
@@ -23,17 +25,19 @@ export function createProjectSummaryPanel(
     return renderFileSummary(
       activeFileName,
       insightsContext.fileChurnMap.get(activeFileName) || 0,
-      context
+      context,
+      config
     );
   }
 
-  return renderProjectSummary(insightsContext, context);
+  return renderProjectSummary(insightsContext, context, config);
 }
 
 function renderFileSummary(
   file: string,
   fileChurn: number,
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  { since }: ExtensionConfig
 ): vscode.WebviewPanel {
   const panel = vscode.window.createWebviewPanel(
     "upliftCode.summary",
@@ -50,6 +54,7 @@ function renderFileSummary(
   panel.webview.html = mustache.render(template.toString(), {
     currentFileName: file,
     currentFileChurn: fileChurn,
+    since,
   });
 
   return panel;
@@ -57,7 +62,8 @@ function renderFileSummary(
 
 function renderProjectSummary(
   { fileChurnMap, avgChurn }: InsightsContext,
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  { since }: ExtensionConfig
 ): vscode.WebviewPanel {
   const rootUri = vscode.workspace.workspaceFolders![0].uri;
   const items = Array.from(getTopRankedChurnFiles(fileChurnMap, 25)).map(
@@ -83,6 +89,7 @@ function renderProjectSummary(
   panel.webview.html = mustache.render(template.toString(), {
     avgChurn,
     items,
+    since,
   });
 
   panel.webview.onDidReceiveMessage((message) => {
