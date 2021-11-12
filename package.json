@@ -1,6 +1,6 @@
 {
   "name": "vscode-uplift-code",
-  "displayName": "uplift-code",
+  "displayName": "Uplift Code Metrics",
   "description": "Code metrics and insights for Git projects",
   "version": "0.0.1",
   "repository": {
@@ -20,6 +20,7 @@
     "code health",
     "churn"
   ],
+  "icon": "images/logo.png",
   "publisher": "CarlosBonetti",
   "activationEvents": [
     "onStartupFinished"
