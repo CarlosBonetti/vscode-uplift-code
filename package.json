@@ -11,7 +11,14 @@
     "vscode": "^1.59.0"
   },
   "categories": [
-    "Other"
+    "Data Science",
+    "Visualization"
+  ],
+  "keywords": [
+    "git",
+    "metrics",
+    "code health",
+    "churn"
   ],
   "activationEvents": [
     "onStartupFinished"
