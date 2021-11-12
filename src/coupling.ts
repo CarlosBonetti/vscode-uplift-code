@@ -56,9 +56,9 @@ export async function getFileCoupling(
       return map;
     }, new Map<string, number>());
 
-  const sortedEntries = Array.from(parsedBuddies.entries()).sort(
-    ([file1, churn1], [file2, churn2]) => churn2 - churn1
-  );
+  const sortedEntries = Array.from(parsedBuddies.entries())
+    .sort(([file1, churn1], [file2, churn2]) => churn2 - churn1)
+    .slice(0, 25);
 
   return new Map(sortedEntries);
 }

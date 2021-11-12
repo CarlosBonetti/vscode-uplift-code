@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uplift Code: Project Summary</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uplift Code: Project Summary</title>
-</head>
+  <body onload="attachLinkEvents()">
+    <h1>Uplift Code: Project Summary</h1>
+    <p>
+      All data displayed is taking in consideration commits from the last
+      {{since}}
+    </p>
 
-<body onload="attachLinkEvents()">
-  <h1>Uplift Code: Project Summary</h1>
-  <h2>Files with highest churn in the last {{since}}</h2>
-  <p>
-    <a href="https://marketplace.visualstudio.com/items?itemName=CarlosBonetti.vscode-uplift-code#churn"
-      target="_blank">What is that?</a>
-  </p>
-  <table>
-    <thead>
-      <tr>
-        <th align="left">File</th>
-        <th align="right">Churn</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#items}}
-      <tr>
-        <td><a href="{{href}}" class="file-link">{{file}}</a></td>
-        <td align="right">{{churn}}</td>
-      </tr>
-      {{/items}}
-    </tbody>
-  </table>
+    <h2>Highest file churn</h2>
+    <p>
+      <a
+        href="https://marketplace.visualstudio.com/items?itemName=CarlosBonetti.vscode-uplift-code#churn"
+        target="_blank"
+        >What is that?</a
+      >
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th align="left">File</th>
+          <th align="right">Churn</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#items}}
+        <tr>
+          <td><a href="{{href}}" class="file-link">{{file}}</a></td>
+          <td align="right">{{churn}}</td>
+        </tr>
+        {{/items}}
+      </tbody>
+    </table>
 
-  <script>
-    function attachLinkEvents() {
-      const vscode = acquireVsCodeApi();
+    <script>
+      function attachLinkEvents() {
+        const vscode = acquireVsCodeApi();
 
-      document.querySelectorAll("a.file-link").forEach((element) => {
-        element.addEventListener("click", () => {
-          vscode.postMessage({
-            command: "open-file",
-            href: element.getAttribute("href"),
+        document.querySelectorAll("a.file-link").forEach((element) => {
+          element.addEventListener("click", () => {
+            vscode.postMessage({
+              command: "open-file",
+              href: element.getAttribute("href"),
+            });
           });
         });
-      });
-    }
-  </script>
-</body>
-
+      }
+    </script>
+  </body>
 </html>
