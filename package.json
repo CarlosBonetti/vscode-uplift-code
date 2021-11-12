@@ -22,6 +22,11 @@
             "type": "array",
             "default": [],
             "description": "Configure glob patterns for excluding files and folders from all metrics calculation. Common configuration and generated files are excluded by default."
+          },
+          "codeInsights.since": {
+            "type": "string",
+            "default": "12.month",
+            "description": "Consider only commits from the specified range. Default is from last 12 months."
           }
         }
       }

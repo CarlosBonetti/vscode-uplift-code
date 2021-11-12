@@ -3,8 +3,6 @@ import minimatch from "minimatch";
 import { execRawGitCommand } from "./git";
 import { getExtensionConfig } from "./configuration";
 
-const since = "18.month";
-
 function createExcludePatternsFilter(patterns: string[]) {
   const filters = patterns.map((pattern) => minimatch.filter(pattern));
   return (target: string, index: number, array: string[]) =>
@@ -14,7 +12,7 @@ function createExcludePatternsFilter(patterns: string[]) {
 export async function calculateProjectChurn(
   git: SimpleGit
 ): Promise<Map<string, number>> {
-  const { excludePatterns } = getExtensionConfig();
+  const { excludePatterns, since } = getExtensionConfig();
 
   const result = await execRawGitCommand(git, [
     "log",
@@ -40,6 +38,8 @@ export async function calculateFileChurn(
   git: SimpleGit,
   fileName: string
 ): Promise<number> {
+  const { since } = getExtensionConfig();
+
   const result = await execRawGitCommand(git, [
     "log",
     "--format=format:",
