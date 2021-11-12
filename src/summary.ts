@@ -1,11 +1,11 @@
-import mustache from "mustache";
 import { readFileSync } from "fs";
+import mustache from "mustache";
 import * as path from "path";
-import * as vscode from "vscode";
-import { InsightsContext } from "../types";
-import { getTopRankedChurnFiles } from "../churn";
 import { SimpleGit } from "simple-git";
-import { workspaceRelativeFilename } from "../util";
+import * as vscode from "vscode";
+import { getTopRankedChurnFiles } from "./churn";
+import { InsightsContext } from "./types";
+import { workspaceRelativeFilename } from "./util";
 
 export function createProjectSummaryPanel(
   context: vscode.ExtensionContext,
@@ -37,7 +37,7 @@ export function createProjectSummaryPanel(
   );
 
   const templateFilePath = vscode.Uri.file(
-    path.join(context.extensionPath, "src/summary/summary.html")
+    path.join(context.extensionPath, "templates/summary.html")
   );
 
   const template = readFileSync(templateFilePath.fsPath);

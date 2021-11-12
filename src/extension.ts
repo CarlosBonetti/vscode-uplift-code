@@ -1,7 +1,7 @@
 import simpleGit, { SimpleGit } from "simple-git";
 import vscode from "vscode";
-import { calculateFileChurn, calculateProjectChurn } from "./churn";
-import { createProjectSummaryPanel } from "./summary/summary";
+import { calculateProjectChurn } from "./churn";
+import { createProjectSummaryPanel } from "./summary";
 import { InsightsContext } from "./types";
 import { workspaceRelativeFilename } from "./util";
 
