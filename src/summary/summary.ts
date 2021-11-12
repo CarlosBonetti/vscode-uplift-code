@@ -5,6 +5,7 @@ import * as vscode from "vscode";
 import { InsightsContext } from "../types";
 import { getTopRankedChurnFiles } from "../churn";
 import { SimpleGit } from "simple-git";
+import { workspaceRelativeFilename } from "../util";
 
 export function createProjectSummaryPanel(
   context: vscode.ExtensionContext,
@@ -16,10 +17,9 @@ export function createProjectSummaryPanel(
   const rootUri = vscode.workspace.workspaceFolders![0].uri;
 
   const activeTextEditor = vscode.window.activeTextEditor;
-  const activeFileName = activeTextEditor?.document.fileName.replace(
-    rootUri.fsPath + "/",
-    ""
-  );
+  const activeFileName = activeTextEditor
+    ? workspaceRelativeFilename(activeTextEditor?.document.fileName)
+    : null;
 
   const items = Array.from(getTopRankedChurnFiles(fileChurnMap, 25)).map(
     ([file, churn]) => ({
@@ -49,8 +49,6 @@ export function createProjectSummaryPanel(
   });
 
   panel.webview.onDidReceiveMessage((message) => {
-    console.log("message", message);
-
     switch (message.command) {
       case "open-file":
         vscode.window.showTextDocument(vscode.Uri.file(message.href));

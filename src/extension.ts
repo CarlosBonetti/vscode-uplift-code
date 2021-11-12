@@ -1,14 +1,9 @@
-import * as vscode from "vscode";
-
 import simpleGit, { SimpleGit } from "simple-git";
-import {
-  calculateChurnScore,
-  calculateFileChurn,
-  calculateProjectChurn,
-  getTopRankedChurnFiles,
-} from "./churn";
+import vscode from "vscode";
+import { calculateFileChurn, calculateProjectChurn } from "./churn";
 import { createProjectSummaryPanel } from "./summary/summary";
 import { InsightsContext } from "./types";
+import { workspaceRelativeFilename } from "./util";
 
 export function activate(context: vscode.ExtensionContext) {
   if (!vscode.workspace.workspaceFolders?.[0]) {
@@ -79,29 +74,37 @@ function updateStatusBarItem(
   statusBarItem.text = `$(loading~spin) Churn: -`;
   statusBarItem.show();
 
-  calculateFileChurn(git, textEditor.document.fileName).then((churn) => {
-    statusBarItem.text = `$(preview) Churn: ${churn}`;
+  if (insightsContext.fileChurnMap) {
+    statusBarItem.text = `$(preview) Churn: ${
+      insightsContext.fileChurnMap.get(
+        workspaceRelativeFilename(textEditor.document.fileName)
+      ) ?? "-"
+    }`;
+  }
 
-    // const { avgChurn, maxChurn, fileChurnMap } = insightsContext;
-    // const score = calculateChurnScore(churn, avgChurn, maxChurn);
+  // calculateFileChurn(git, textEditor.document.fileName).then((churn) => {
+  // statusBarItem.text = `$(preview) Churn: ${churn}`;
 
-    // console.log({
-    //   churn,
-    //   score,
-    //   scoreMaxChurn: calculateChurnScore(maxChurn, avgChurn, maxChurn),
-    //   scoreAvgChurn: calculateChurnScore(avgChurn, avgChurn, maxChurn),
-    //   scoreMinChurn1: calculateChurnScore(1, avgChurn, maxChurn),
-    //   insightsContext,
-    // });
+  // const { avgChurn, maxChurn, fileChurnMap } = insightsContext;
+  // const score = calculateChurnScore(churn, avgChurn, maxChurn);
 
-    // const formatter = new Intl.NumberFormat("en", {
-    //   // TODO: get user's locale
-    //   minimumFractionDigits: 1,
-    //   maximumFractionDigits: 1,
-    // });
+  // console.log({
+  //   churn,
+  //   score,
+  //   scoreMaxChurn: calculateChurnScore(maxChurn, avgChurn, maxChurn),
+  //   scoreAvgChurn: calculateChurnScore(avgChurn, avgChurn, maxChurn),
+  //   scoreMinChurn1: calculateChurnScore(1, avgChurn, maxChurn),
+  //   insightsContext,
+  // });
 
-    // statusBarItem.text = `$(preview) Churn: ${churn} | Score: ${formatter.format(
-    //   score * 10
-    // )}`;
-  });
+  // const formatter = new Intl.NumberFormat("en", {
+  //   // TODO: get user's locale
+  //   minimumFractionDigits: 1,
+  //   maximumFractionDigits: 1,
+  // });
+
+  // statusBarItem.text = `$(preview) Churn: ${churn} | Score: ${formatter.format(
+  //   score * 10
+  // )}`;
+  // });
 }

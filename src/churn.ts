@@ -42,9 +42,11 @@ export async function calculateFileChurn(
 
   const result = await execRawGitCommand(git, [
     "log",
-    "--format=format:",
+    "--all",
+    "--find-renames",
+    "--find-copies",
     "--name-only",
-    "--follow",
+    "--format=format:",
     `--since=${since}`,
     fileName,
   ]);
