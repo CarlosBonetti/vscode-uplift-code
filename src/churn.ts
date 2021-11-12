@@ -2,12 +2,7 @@ import { SimpleGit } from "simple-git";
 import minimatch from "minimatch";
 import { execRawGitCommand } from "./git";
 import { getExtensionConfig } from "./configuration";
-
-function createExcludePatternsFilter(patterns: string[]) {
-  const filters = patterns.map((pattern) => minimatch.filter(pattern));
-  return (target: string, index: number, array: string[]) =>
-    filters.every((filter) => !filter(target, index, array));
-}
+import { createExcludePatternsFilter } from "./util";
 
 export async function calculateProjectChurn(
   git: SimpleGit
