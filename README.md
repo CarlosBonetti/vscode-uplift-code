@@ -37,10 +37,10 @@ Churn or file churn is the number of times a file has changed in a given time ra
 - [Introduction to code churn](https://www.pluralsight.com/blog/tutorials/code-churn)
 - [6 Causes of Code Churn and What You Should Do About Them](https://www.pluralsight.com/blog/teams/6-causes-of-code-churn-and-what-you-should-do-about-them)
 
-### Complexity / Complexity Trend
+### File coupling
 
-Coming soon.
+File coupling is a potential code smell that occurs when you have an implicit temporal relationship between two or more files in a project. If files A and B are constantly changed together, in the same commit, they are probably coupled or tighly related to each other.
 
-### Temporal Coupling
+### Complexity / Complexity trend
 
 Coming soon.
