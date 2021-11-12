@@ -3,6 +3,10 @@
   "displayName": "uplift-code",
   "description": "Code metrics and insights for Git projects",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CarlosBonetti/vscode-uplift-code"
+  },
   "engines": {
     "vscode": "^1.59.0"
   },
