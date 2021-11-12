@@ -1,4 +1,4 @@
-import { render } from "mustache";
+import mustache from "mustache";
 import { readFileSync } from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
@@ -41,7 +41,7 @@ export function createProjectSummaryPanel(
   );
 
   const template = readFileSync(templateFilePath.fsPath);
-  panel.webview.html = render(template.toString(), {
+  panel.webview.html = mustache.render(template.toString(), {
     avgChurn,
     items,
     currentFileName: activeFileName,
