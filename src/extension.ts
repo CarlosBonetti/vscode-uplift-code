@@ -1,9 +1,8 @@
-import simpleGit, { SimpleGit } from "simple-git";
+import simpleGit from "simple-git";
 import vscode from "vscode";
 import { calculateProjectChurn } from "./churn";
 import { createProjectSummaryPanel } from "./summary";
 import { InsightsContext } from "./types";
-import { workspaceRelativeFilename } from "./util";
 
 export function activate(context: vscode.ExtensionContext) {
   if (!vscode.workspace.workspaceFolders?.[0]) {
@@ -32,18 +31,14 @@ export function activate(context: vscode.ExtensionContext) {
     )
   );
 
-  const churnStatusBarItem = vscode.window.createStatusBarItem(
+  const upliftStatusBarButton = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
     100
   );
-  churnStatusBarItem.command = "upliftCode.showProjectSummary";
-  context.subscriptions.push(churnStatusBarItem);
-  context.subscriptions.push(
-    vscode.window.onDidChangeActiveTextEditor(() =>
-      updateStatusBarItem(churnStatusBarItem, git, insightsContext)
-    )
-  );
-  updateStatusBarItem(churnStatusBarItem, git, insightsContext);
+  upliftStatusBarButton.command = "upliftCode.showProjectSummary";
+  upliftStatusBarButton.text = "$(preview) Uplift";
+  upliftStatusBarButton.show();
+  context.subscriptions.push(upliftStatusBarButton);
 
   calculateProjectChurn(git).then((map) => {
     const maxChurn = Math.max(...map.values());
@@ -54,59 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
     insightsContext.maxChurn = maxChurn;
     insightsContext.avgChurn = avgChurn;
     insightsContext.loaded = true;
-
-    updateStatusBarItem(churnStatusBarItem, git, insightsContext);
   });
 }
 
 export function deactivate() {}
-
-function updateStatusBarItem(
-  statusBarItem: vscode.StatusBarItem,
-  git: SimpleGit,
-  insightsContext: InsightsContext
-): void {
-  const textEditor = vscode.window.activeTextEditor;
-
-  if (!textEditor) {
-    statusBarItem.hide();
-    return;
-  }
-
-  statusBarItem.text = `$(loading~spin) Churn: -`;
-  statusBarItem.show();
-
-  if (insightsContext.loaded) {
-    statusBarItem.text = `$(preview) Churn: ${
-      insightsContext.fileChurnMap.get(
-        workspaceRelativeFilename(textEditor.document.fileName)
-      ) ?? "-"
-    }`;
-  }
-
-  // calculateFileChurn(git, textEditor.document.fileName).then((churn) => {
-  // statusBarItem.text = `$(preview) Churn: ${churn}`;
-
-  // const { avgChurn, maxChurn, fileChurnMap } = insightsContext;
-  // const score = calculateChurnScore(churn, avgChurn, maxChurn);
-
-  // console.log({
-  //   churn,
-  //   score,
-  //   scoreMaxChurn: calculateChurnScore(maxChurn, avgChurn, maxChurn),
-  //   scoreAvgChurn: calculateChurnScore(avgChurn, avgChurn, maxChurn),
-  //   scoreMinChurn1: calculateChurnScore(1, avgChurn, maxChurn),
-  //   insightsContext,
-  // });
-
-  // const formatter = new Intl.NumberFormat("en", {
-  //   // TODO: get user's locale
-  //   minimumFractionDigits: 1,
-  //   maximumFractionDigits: 1,
-  // });
-
-  // statusBarItem.text = `$(preview) Churn: ${churn} | Score: ${formatter.format(
-  //   score * 10
-  // )}`;
-  // });
-}
