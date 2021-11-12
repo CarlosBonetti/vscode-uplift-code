@@ -4,3 +4,11 @@ export interface InsightsContext {
   maxChurn: number;
   avgChurn: number;
 }
+
+export interface ProjectSummaryData {
+  items: {
+    file: string;
+    href: string;
+    churn: number;
+  }[];
+}

@@ -3,94 +3,66 @@ import mustache from "mustache";
 import * as path from "path";
 import { SimpleGit } from "simple-git";
 import * as vscode from "vscode";
-import { getTopRankedChurnFiles } from "./churn";
-import { InsightsContext } from "./types";
+import { calculateProjectChurn, getTopRankedChurnFiles } from "./churn";
+import { getExtensionConfig } from "./configuration";
+import { ProjectSummaryData } from "./types";
 import { workspaceRelativeFilename } from "./util";
-import { ExtensionConfig, getExtensionConfig } from "./configuration";
 
 export function createProjectSummaryPanel(
   context: vscode.ExtensionContext,
-  git: SimpleGit,
-  insightsContext: InsightsContext
+  git: SimpleGit
 ): vscode.WebviewPanel {
   // https://code.visualstudio.com/api/extension-guides/webview
 
-  const config = getExtensionConfig();
   const activeTextEditor = vscode.window.activeTextEditor;
   const activeFileName = activeTextEditor
     ? workspaceRelativeFilename(activeTextEditor?.document.fileName)
     : null;
 
   if (!!activeFileName) {
-    return renderFileSummary(
-      activeFileName,
-      insightsContext.fileChurnMap.get(activeFileName) || 0,
-      context,
-      config
-    );
+    return renderFileSummary(git, activeFileName, context);
   }
 
-  return renderProjectSummary(insightsContext, context, config);
+  return renderProjectSummary(git, context);
 }
 
 function renderFileSummary(
-  file: string,
-  fileChurn: number,
-  context: vscode.ExtensionContext,
-  { since }: ExtensionConfig
+  git: SimpleGit,
+  activeFile: string,
+  context: vscode.ExtensionContext
 ): vscode.WebviewPanel {
+  const config = getExtensionConfig();
   const panel = vscode.window.createWebviewPanel(
     "upliftCode.summary",
     "Uplift Code: File Summary",
     vscode.ViewColumn.Active,
     { enableScripts: true }
   );
+  panel.webview.html = "Loading...";
 
-  const templateFilePath = vscode.Uri.file(
-    path.join(context.extensionPath, "templates/fileSummary.html")
-  );
-
-  const template = readFileSync(templateFilePath.fsPath);
-  panel.webview.html = mustache.render(template.toString(), {
-    currentFileName: file,
-    currentFileChurn: fileChurn,
-    since,
+  calculateProjectChurn(git).then((map) => {
+    panel.webview.html = renderTemplate(context, "templates/fileSummary.html", {
+      currentFileName: activeFile,
+      currentFileChurn: map.get(activeFile) ?? 0,
+      since: config.since,
+    });
   });
 
   return panel;
 }
 
 function renderProjectSummary(
-  { fileChurnMap, avgChurn }: InsightsContext,
-  context: vscode.ExtensionContext,
-  { since }: ExtensionConfig
+  git: SimpleGit,
+  context: vscode.ExtensionContext
 ): vscode.WebviewPanel {
-  const rootUri = vscode.workspace.workspaceFolders![0].uri;
-  const items = Array.from(getTopRankedChurnFiles(fileChurnMap, 25)).map(
-    ([file, churn]) => ({
-      file: file,
-      href: path.join(rootUri.fsPath, file),
-      churn,
-    })
-  );
-
+  const config = getExtensionConfig();
   const panel = vscode.window.createWebviewPanel(
     "upliftCode.summary",
     "Uplift Code: Project Summary",
     vscode.ViewColumn.Active,
     { enableScripts: true }
   );
-
-  const templateFilePath = vscode.Uri.file(
-    path.join(context.extensionPath, "templates/projectSummary.html")
-  );
-
-  const template = readFileSync(templateFilePath.fsPath);
-  panel.webview.html = mustache.render(template.toString(), {
-    avgChurn,
-    items,
-    since,
-  });
+  panel.webview.html = "Loading...";
 
   panel.webview.onDidReceiveMessage((message) => {
     switch (message.command) {
@@ -99,5 +71,46 @@ function renderProjectSummary(
         break;
     }
   });
+
+  calculateProjectSummaryData(git).then((data) => {
+    panel.webview.html = renderTemplate(
+      context,
+      "templates/projectSummary.html",
+      {
+        ...data,
+        since: config.since,
+      }
+    );
+  });
+
   return panel;
+}
+
+function renderTemplate(
+  context: vscode.ExtensionContext,
+  templatePath: string,
+  data: unknown
+): string {
+  const templateFilePath = vscode.Uri.file(
+    path.join(context.extensionPath, templatePath)
+  );
+  const template = readFileSync(templateFilePath.fsPath);
+  return mustache.render(template.toString(), data);
+}
+
+async function calculateProjectSummaryData(
+  git: SimpleGit
+): Promise<ProjectSummaryData> {
+  const churnMap = await calculateProjectChurn(git);
+
+  const rootUri = vscode.workspace.workspaceFolders![0].uri;
+  const items = Array.from(getTopRankedChurnFiles(churnMap, 25)).map(
+    ([file, churn]) => ({
+      file: file,
+      href: path.join(rootUri.fsPath, file),
+      churn,
+    })
+  );
+
+  return { items };
 }
