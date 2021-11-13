@@ -8,6 +8,18 @@ Code metrics and insights for Git projects.
 - Open your project as a [vscode workspace](https://code.visualstudio.com/docs/editor/workspaces)
 - Your status bar will now display some metrics about the active file. If you click it, more details appear, also including a summary of metrics for the entire project.
 
+### Project summary
+
+Open a Project Summary tab displaying metrics information about the entire project by using the "Uplift Code: Show Project Summary" command or by clicking in the status bar item "Uplift Code" while no active file is open.
+
+![Show project summary command](images/show-project-summary.gif)
+
+### File summary
+
+Open a File Summary tab displaying metrics information about the active file by clicking in the status bar item "Uplift Code".
+
+![Show file summary command](images/show-file-summary.gif)
+
 ## Metrics
 
 Here's an overview of all metrics calculated by UpliftCode and their meaning.
