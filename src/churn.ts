@@ -1,7 +1,6 @@
 import { SimpleGit } from "simple-git";
-import minimatch from "minimatch";
-import { execRawGitCommand } from "./git";
 import { getExtensionConfig } from "./configuration";
+import { execRawGitCommand } from "./git";
 import { createExcludePatternsFilter } from "./util";
 
 export async function calculateProjectChurn(
