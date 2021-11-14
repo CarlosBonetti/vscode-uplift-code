@@ -1,7 +1,7 @@
 {
   "name": "vscode-uplift-code",
   "displayName": "Uplift Code Metrics",
-  "description": "Code metrics and insights for Git projects",
+  "description": "Code metrics and insights for git projects",
   "version": "0.2.1",
   "repository": {
     "type": "git",

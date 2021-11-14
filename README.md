@@ -1,6 +1,6 @@
 # Uplift Code
 
-Code metrics and insights for Git projects.
+Code metrics and insights for git projects.
 
 ## Getting started
 
