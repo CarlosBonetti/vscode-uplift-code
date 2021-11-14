@@ -4,9 +4,9 @@ Code metrics and insights for Git projects.
 
 ## Getting started
 
-- Install the extension
-- Open your project as a [vscode workspace](https://code.visualstudio.com/docs/editor/workspaces)
-- Your status bar will now display some metrics about the active file. If you click it, more details appear, also including a summary of metrics for the entire project.
+1. Install the extension
+2. Open your project as a [vscode workspace](https://code.visualstudio.com/docs/editor/workspaces)
+3. Open details about the active file by clicking on the extension's status bar item or by lauching the "Uplift Code: Show Project Summary" command.
 
 ### Project summary
 
