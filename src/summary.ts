@@ -9,22 +9,21 @@ import { ProjectSummaryData } from "./types";
 import { workspaceRelativeFilename } from "./util";
 import { getFileCoupling } from "./coupling";
 
-export function createProjectSummaryPanel(
-  context: vscode.ExtensionContext,
-  git: SimpleGit
-): vscode.WebviewPanel {
-  // https://code.visualstudio.com/api/extension-guides/webview
+export function createProjectSummaryPanel(context: vscode.ExtensionContext, git: SimpleGit): void {
+  renderProjectSummary(git, context);
+}
 
+export function createFileSummaryPanel(context: vscode.ExtensionContext, git: SimpleGit): void {
   const activeTextEditor = vscode.window.activeTextEditor;
   const activeFileName = activeTextEditor
     ? workspaceRelativeFilename(activeTextEditor?.document.fileName)
     : null;
 
-  if (!!activeFileName) {
-    return renderFileSummary(git, activeFileName, context);
+  if (!activeFileName) {
+    return;
   }
 
-  return renderProjectSummary(git, context);
+  renderFileSummary(git, activeFileName, context);
 }
 
 function renderFileSummary(
@@ -51,24 +50,23 @@ function renderFileSummary(
     }
   });
 
-  Promise.all([
-    calculateProjectChurn(git),
-    getFileCoupling(activeFile, git),
-  ]).then(([churn, coupling]) => {
-    const rootUri = vscode.workspace.workspaceFolders![0].uri;
+  Promise.all([calculateProjectChurn(git), getFileCoupling(activeFile, git)]).then(
+    ([churn, coupling]) => {
+      const rootUri = vscode.workspace.workspaceFolders![0].uri;
 
-    const fileChurn = churn.get(activeFile) ?? 0;
-    panel.webview.html = renderTemplate(context, "templates/fileSummary.html", {
-      currentFileName: activeFile,
-      currentFileChurn: fileChurn,
-      since: config.since,
-      coupling: Array.from(coupling.entries()).map(([file, count]) => ({
-        file,
-        ratio: ((count / fileChurn) * 100).toFixed(2),
-        href: path.join(rootUri.fsPath, file),
-      })),
-    });
-  });
+      const fileChurn = churn.get(activeFile) ?? 0;
+      panel.webview.html = renderTemplate(context, "templates/fileSummary.html", {
+        currentFileName: activeFile,
+        currentFileChurn: fileChurn,
+        since: config.since,
+        coupling: Array.from(coupling.entries()).map(([file, count]) => ({
+          file,
+          ratio: ((count / fileChurn) * 100).toFixed(2),
+          href: path.join(rootUri.fsPath, file),
+        })),
+      });
+    }
+  );
 
   return panel;
 }
@@ -95,14 +93,10 @@ function renderProjectSummary(
   });
 
   calculateProjectSummaryData(git).then((data) => {
-    panel.webview.html = renderTemplate(
-      context,
-      "templates/projectSummary.html",
-      {
-        ...data,
-        since: config.since,
-      }
-    );
+    panel.webview.html = renderTemplate(context, "templates/projectSummary.html", {
+      ...data,
+      since: config.since,
+    });
   });
 
   return panel;
@@ -113,26 +107,20 @@ function renderTemplate(
   templatePath: string,
   data: unknown
 ): string {
-  const templateFilePath = vscode.Uri.file(
-    path.join(context.extensionPath, templatePath)
-  );
+  const templateFilePath = vscode.Uri.file(path.join(context.extensionPath, templatePath));
   const template = readFileSync(templateFilePath.fsPath);
   return mustache.render(template.toString(), data);
 }
 
-async function calculateProjectSummaryData(
-  git: SimpleGit
-): Promise<ProjectSummaryData> {
+async function calculateProjectSummaryData(git: SimpleGit): Promise<ProjectSummaryData> {
   const churnMap = await calculateProjectChurn(git);
 
   const rootUri = vscode.workspace.workspaceFolders![0].uri;
-  const items = Array.from(getTopRankedChurnFiles(churnMap, 25)).map(
-    ([file, churn]) => ({
-      file: file,
-      href: path.join(rootUri.fsPath, file),
-      churn,
-    })
-  );
+  const items = Array.from(getTopRankedChurnFiles(churnMap, 25)).map(([file, churn]) => ({
+    file: file,
+    href: path.join(rootUri.fsPath, file),
+    churn,
+  }));
 
   return { items };
 }

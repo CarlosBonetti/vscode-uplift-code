@@ -6,17 +6,17 @@ Code metrics and insights for git projects.
 
 1. Install the extension
 2. Open your project as a [vscode workspace](https://code.visualstudio.com/docs/editor/workspaces)
-3. Open details about the active file by clicking on the extension's status bar item or by lauching the "Uplift Code: Show Project Summary" command.
+3. Show metrics for project and files by triggering Uplift's commands: use `Cmd+Shift+P` and search for "Uplift" to see available commands.
 
 ### Project summary
 
-Open a Project Summary tab displaying metrics information about the entire project by using the "Uplift Code: Show Project Summary" command or by clicking in the status bar item "Uplift Code" while no active file is open.
+Open a Project Summary tab displaying metrics information about the entire project by using the "Uplift Code: Show Project Summary" command.
 
 ![Show project summary command](images/show-project-summary.gif)
 
 ### File summary
 
-Open a File Summary tab displaying metrics information about the active file by clicking in the status bar item "Uplift Code".
+Open a File Summary tab displaying metrics information about the active file by using the "Uplift Code: Show File Summary"command.
 
 ![Show file summary command](images/show-file-summary.gif)
 

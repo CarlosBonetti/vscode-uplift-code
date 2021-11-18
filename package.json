@@ -48,8 +48,15 @@
       {
         "title": "Uplift Code: Show project summary",
         "command": "upliftCode.showProjectSummary"
+      },
+      {
+        "title": "Uplift Code: Show file summary",
+        "command": "upliftCode.showFileSummary"
       }
     ]
+  },
+  "prettier": {
+    "printWidth": 100
   },
   "scripts": {
     "vscode:prepublish": "npm run esbuild-base -- --minify",
