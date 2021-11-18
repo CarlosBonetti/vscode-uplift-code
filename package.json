@@ -2,7 +2,7 @@
   "name": "vscode-uplift-code",
   "displayName": "Uplift Code Metrics",
   "description": "Code metrics and insights for git projects",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/CarlosBonetti/vscode-uplift-code"
