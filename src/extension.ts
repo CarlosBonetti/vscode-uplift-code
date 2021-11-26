@@ -9,6 +9,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   const git = simpleGit({
     baseDir: vscode.workspace.workspaceFolders[0].uri.path,
+    maxConcurrentProcesses: 6,
+    timeout: { block: 30000 },
   });
 
   const showProjectSummary = () => {
@@ -37,5 +39,3 @@ export function activate(context: vscode.ExtensionContext) {
   // upliftStatusBarButton.show();
   // context.subscriptions.push(upliftStatusBarButton);
 }
-
-export function deactivate() {}

@@ -1,12 +1,8 @@
 import { SimpleGit } from "simple-git";
-import { execRawGitCommand } from "./git";
-import { getExtensionConfig } from "./configuration";
-import { createExcludePatternsFilter } from "./util";
+import { getExtensionConfig } from "../../configuration";
+import { createExcludePatternsFilter } from "../../util";
 
-export async function getFileCoupling(
-  file: string,
-  git: SimpleGit
-): Promise<Map<string, number>> {
+export async function getFileCoupling(file: string, git: SimpleGit): Promise<Map<string, number>> {
   const { excludePatterns, since } = getExtensionConfig();
 
   const result = await git.raw([
@@ -25,12 +21,12 @@ export async function getFileCoupling(
     .filter(filterExcludePatterns)
     .reduce(
       ({ currentCommit, allCommits }, file) => {
-        let commitArr = !currentCommit ? new Array() : currentCommit;
+        let commitArr = !currentCommit ? [] : currentCommit;
         if (!file) {
-          commitArr = new Array();
+          commitArr = [];
         }
 
-        if (!!file) {
+        if (file) {
           commitArr.push(file);
         }
 
@@ -58,7 +54,7 @@ export async function getFileCoupling(
 
   const sortedEntries = Array.from(parsedBuddies.entries())
     .sort(([file1, churn1], [file2, churn2]) => churn2 - churn1)
-    .slice(0, 25);
+    .slice(0, 10);
 
   return new Map(sortedEntries);
 }

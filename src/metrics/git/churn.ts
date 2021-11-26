@@ -1,11 +1,9 @@
 import { SimpleGit } from "simple-git";
-import { getExtensionConfig } from "./configuration";
-import { execRawGitCommand } from "./git";
-import { createExcludePatternsFilter } from "./util";
+import { getExtensionConfig } from "../../configuration";
+import { execRawGitCommand } from "../../git";
+import { createExcludePatternsFilter } from "../../util";
 
-export async function calculateProjectChurn(
-  git: SimpleGit
-): Promise<Map<string, number>> {
+export async function calculateProjectChurn(git: SimpleGit): Promise<Map<string, number>> {
   const { excludePatterns, since } = getExtensionConfig();
 
   const result = await execRawGitCommand(git, [
@@ -28,10 +26,7 @@ export async function calculateProjectChurn(
   return map;
 }
 
-export async function calculateFileChurn(
-  git: SimpleGit,
-  fileName: string
-): Promise<number> {
+export async function calculateFileChurn(git: SimpleGit, fileName: string): Promise<number> {
   const { since } = getExtensionConfig();
 
   const result = await execRawGitCommand(git, [
@@ -60,11 +55,7 @@ export function getTopRankedChurnFiles(
   return new Map(sortedEntries);
 }
 
-export function calculateChurnScore(
-  churn: number,
-  avg: number,
-  max: number
-): number {
+export function calculateChurnScore(churn: number, avg: number, max: number): number {
   // wolfram: solve for a: 1 - a log(1) = 1 and 1 - a log(M) = 0 and 1 - a log(V) = 0.75
   // const a = 3 / (10 * Math.log(avg)); // for f(avg) = 0.7
   // const a = 1 / (5 * Math.log(avg)); // for f(avg) = 0.8
