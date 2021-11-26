@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import { h, JSX } from "preact";
+import { useEffect, useRef } from "preact/compat";
 import { useVsCodeApi } from "../hooks/useVsCodeApi";
 
-export const FileLink = (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+export const FileLink = (props: JSX.HTMLAttributes<HTMLAnchorElement>) => {
   const ref = useRef<HTMLAnchorElement>();
   const vscode = useVsCodeApi();
 

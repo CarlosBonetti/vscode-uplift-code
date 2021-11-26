@@ -1,5 +1,4 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import { h, render } from "preact";
 import { FileLink } from "../components/FileLink";
 import { useVsCodeProps } from "../hooks/useVsCodeProps";
 import { ProjectSummaryPageProps } from "./ProjectSummaryPage.types";
@@ -28,8 +27,8 @@ const ProjectSummaryPage = (props: ProjectSummaryPageProps) => {
         <table>
           <thead>
             <tr>
-              <th align="left">File</th>
-              <th align="right">Churn</th>
+              <th style={{ textAlign: "left" }}>File</th>
+              <th style={{ textAlign: "right" }}>Churn</th>
             </tr>
           </thead>
           <tbody>
@@ -38,7 +37,7 @@ const ProjectSummaryPage = (props: ProjectSummaryPageProps) => {
                 <td>
                   <FileLink href={item.href}>{item.file}</FileLink>
                 </td>
-                <td align="right">{item.churn}</td>
+                <td style={{ textAlign: "right" }}>{item.churn}</td>
               </tr>
             ))}
           </tbody>
@@ -54,4 +53,4 @@ const App = () => {
   return <ProjectSummaryPage {...props} />;
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+render(<App />, document.getElementById("root"));

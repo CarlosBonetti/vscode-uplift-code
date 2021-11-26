@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "preact/compat";
 
 export function useVsCodeProps() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

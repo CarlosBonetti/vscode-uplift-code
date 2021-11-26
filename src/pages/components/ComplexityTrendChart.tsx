@@ -1,5 +1,6 @@
 import Chart from "chart.js/auto";
-import React, { useEffect, useRef } from "react";
+import { h } from "preact";
+import { useEffect, useRef } from "preact/compat";
 
 export interface ComplexityTrendChartProps {
   items: {

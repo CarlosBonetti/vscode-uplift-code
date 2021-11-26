@@ -1,5 +1,4 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import { h, render } from "preact";
 import { ComplexityTrendChart } from "../components/ComplexityTrendChart";
 import { FileLink } from "../components/FileLink";
 import { useVsCodeProps } from "../hooks/useVsCodeProps";
@@ -30,12 +29,12 @@ const FileSummaryPage = (props: FileSummaryPageProps) => {
       <table>
         <tbody>
           <tr>
-            <th align="left">File churn</th>
-            <td align="right">{currentFileChurn || "Loading..."}</td>
+            <th style={{ textAlign: "left" }}>File churn</th>
+            <td style={{ textAlign: "right" }}>{currentFileChurn || "Loading..."}</td>
           </tr>
           <tr>
-            <th align="left">Cyclomatic Complexity</th>
-            <td align="right">{complexity || "Loading..."}</td>
+            <th style={{ textAlign: "left" }}>Cyclomatic Complexity</th>
+            <td style={{ textAlign: "right" }}>{complexity || "Loading..."}</td>
           </tr>
         </tbody>
       </table>
@@ -60,10 +59,8 @@ const FileSummaryPage = (props: FileSummaryPageProps) => {
         <table>
           <thead>
             <tr>
-              <th align="left">File</th>
-              <th align="right" style={{ whiteSpace: "nowrap" }}>
-                Coupling ratio
-              </th>
+              <th style={{ textAlign: "left" }}>File</th>
+              <th style={{ textAlign: "right", whiteSpace: "nowrap" }}>Coupling ratio</th>
             </tr>
           </thead>
           <tbody>
@@ -72,7 +69,7 @@ const FileSummaryPage = (props: FileSummaryPageProps) => {
                 <td>
                   <FileLink href={item.href}>{item.file}</FileLink>
                 </td>
-                <td align="right">{item.ratio}%</td>
+                <td style={{ textAlign: "right" }}>{item.ratio}%</td>
               </tr>
             ))}
           </tbody>
@@ -88,4 +85,4 @@ const App = () => {
   return <FileSummaryPage {...props} />;
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+render(<App />, document.getElementById("root"));
