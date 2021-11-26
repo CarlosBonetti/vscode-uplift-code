@@ -13,3 +13,5 @@ vsc-extension-quickstart.md
 
 .env
 node_modules
+.cache
+.parcel-cache
